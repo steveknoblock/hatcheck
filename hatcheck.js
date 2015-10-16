@@ -7,7 +7,7 @@ var fs = require('fs');
 var sha1 = require('sha1');
 var path  = require('path');
 
-var content = 'asdfasdfasdf';
+var content = { 'name':'Fedora', 'color':'black' };
 
 var id = sha1(content);
 
@@ -38,36 +38,12 @@ var fileName = getFileName(id);
 
 console.log(fileName);
 
-mkdirSync( path.join(dirName) );
+mkdirSync( path.join('objects', dirName) );
 
-fs.writeFile(path.join(dirName, fileName), "content", function(err) {
+fs.writeFile(path.join('objects', dirName, fileName), content, function(err) {
     if(err) {
         return console.log(err);
     }
-
-    console.log("The file was saved!");
+    console.log("Here's your ticket:" + id);
 });
 
-
-
-
-mkdirSync( path.join('first') );
-mkdirSync( path.join('first', 'second') );
-
-fs.writeFile("hey", "Hey there!", function(err) {
-    if(err) {
-        return console.log(err);
-    }
-
-    console.log("The file was saved!");
-}); 
-
-/*
-$file_path = $this->pathToObjects;
-		$id = sha1($content);
-
-		//echo "<p>Hash for object is: {$id}</p>\n";
-
-		$dirname = substr($id, 0, 2);
-		$filename = substr($id, 2, 40-2);
-		*/

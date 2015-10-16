@@ -13,11 +13,11 @@ var id = sha1(content);
 
 
 var getDirName = function (id) {
-	return id.substr(0, 2);
+  return id.substr(0, 2);
 }
 
 var getFileName = function (id) {
-	return id.slice(2);
+  return id.slice(2);
 }
 
 var mkdirSync = function (path) {

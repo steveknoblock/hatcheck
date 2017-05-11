@@ -1,5 +1,9 @@
 // Scratchpad
 
+
+var myFilter = function(obj) { return obj.color === "No"; };
+
+
 // template string to support multiline strings
 var data = `[{
     "name": "qBert",
@@ -59,7 +63,9 @@ var result = JSON.parse(data).filter(function(obj) {
 });
 console.log(result);
 
-
+// with passed filter function
+var result = JSON.parse(data).filter(myFilter);
+console.log(result);
 
 /*
 var result = JSON.parse(data).filter(obj, function () {

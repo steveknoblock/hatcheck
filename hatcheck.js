@@ -28,15 +28,15 @@ var mkdirSync = function (path) {
   }
 }
 
-console.log(id);
+/* console.log(id); */
 
 var dirName = getDirName(id);
 
-console.log(dirName);
+/* console.log(dirName); */
 
 var fileName = getFileName(id);
 
-console.log(fileName);
+/* console.log(fileName); */
 
 mkdirSync( path.join('objects', dirName) );
 
@@ -44,6 +44,5 @@ fs.writeFile(path.join('objects', dirName, fileName), content, function(err) {
     if(err) {
         return console.log(err);
     }
-    console.log("Here's your ticket:" + id);
+    console.log("Thank you for the content. Here's your ticket: " + id);
 });
-

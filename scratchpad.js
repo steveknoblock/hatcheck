@@ -35,7 +35,7 @@ var data = `[{
 
 
 // Test
-
+/*
 try{
     var obj = JSON.parse(data);
 }
@@ -43,13 +43,23 @@ catch(e){
    throw new Error("Sorry, man, I could not parse your JSON data.");
   }
 console.log(obj);
+*/
+
+// sans fluent way of writing this
+var myArray = JSON.parse(data);
+var result = myArray.filter(function (something) {
+  //console.log(something);
+  //console.log(something.color);
+  return something.color === 'No';
+});
+
+// fluent way of writing the query
+var result = JSON.parse(data).filter(function(obj) {
+  return obj.color === "No";
+});
+console.log(result);
 
 
-/*
-var str = '{ "name":"Lady Ada", "age":"timeless" }';
-var obj = JSON.parse(str);
-console.log(obj);
-*
 
 /*
 var result = JSON.parse(data).filter(obj, function () {

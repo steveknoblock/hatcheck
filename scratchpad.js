@@ -1,6 +1,6 @@
 // Scratchpad
 
-
+// Define filter
 var myFilter = function(obj) { return obj.color === "No"; };
 
 
@@ -65,12 +65,28 @@ console.log(result);
 
 // with passed filter function
 var result = JSON.parse(data).filter(myFilter);
-console.log(result);
-
+console.log(result)
 /*
 var result = JSON.parse(data).filter(obj, function () {
 	return obj.color === 'No';
-});
+})
 console.log(result);
 */
+
+/* access a function passed to a property of an object */
+var f = function(obj) { console.log("Hello Kitty") };
+
+o = {};
+
+o.foo = f;
+
+o.foo();
+
+// Define lambda object
+
+var obj = {};
+
+// Assemble lambda object
+obj.lambda = f;
+obj.data = data;
 

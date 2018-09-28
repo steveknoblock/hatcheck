@@ -21,11 +21,11 @@ Hatcheck = {
 
 http.createServer(function (request, response) {
 
-	request.
-	console.log('STATUS: ' + res.statusCode);
-  	console.log('HEADERS: ' + JSON.stringify(res.headers));
+	//request.
+	//console.log('STATUS: ' + res.statusCode);
+  	//console.log('HEADERS: ' + JSON.stringify(res.headers));
 
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	response.end('Hello World\n');
-}).listen(8081);
+}).listen(8080);
 

@@ -3,8 +3,8 @@
  * CAS over HTTP
  */
 
-const Data = require("./models-data.js");
-const http = require("http");
+import Data from "./models-data.js";
+import { createServer } from "http";
 
 const hostname = 'localhost';
 const port ='8080';
@@ -34,7 +34,7 @@ var id = data.save(content);
 
 data.getData(id);
 
-http.createServer(function (request, response) {
+createServer(function (request, response) {
 
 	//request.
 	//console.log('STATUS: ' + res.statusCode);

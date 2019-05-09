@@ -1,0 +1,31 @@
+{
+  "name": "hatcheck",
+  "version": "1.0.0",
+  "description": "content addressable object store with RDF metadata",
+  "main": "express-hello-world.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "sha1": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steveknoblock/hatcheck.git"
+  },
+  "author": "Steve Knoblock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/steveknoblock/hatcheck/issues"
+  },
+  "homepage": "https://github.com/steveknoblock/hatcheck#readme",
+  "keywords": [
+    "object",
+    "store",
+    "semantic",
+    "web"
+  ]
+}

@@ -46,3 +46,4 @@ fs.writeFile(path.join('objects', dirName, fileName), content, function(err) {
     }
     console.log("Thank you for the content. Here's your ticket: " + id);
 });
+

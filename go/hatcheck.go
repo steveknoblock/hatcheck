@@ -1,7 +1,7 @@
 package main
 
 import (
-  "crypto/md5"
+  "md5"
   "fmt"
   "bufio"
   "io/ioutil"
@@ -17,8 +17,6 @@ func check(e error) {
 func main() {
    //data = read file here
    //hash = md5.sum(data)
-
- 
 
   data = "Hello World"
 

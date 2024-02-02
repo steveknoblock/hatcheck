@@ -1,7 +1,7 @@
 package main
 
 import (
-  "md5"
+  "crypto/md5"
   "fmt"
   "bufio"
   "io/ioutil"

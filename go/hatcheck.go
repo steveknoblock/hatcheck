@@ -1,8 +1,11 @@
 package main
 
 import (
+	//"io"
+	//"os"
+	//"log"
+	"crypto/md5"
 	"fmt"
-	"os"
 )
 
 func check(e error) {
@@ -12,21 +15,27 @@ func check(e error) {
 }
 
 func main() {
-	//data = read file here
-	//hash = md5.sum(data)
 
 	data := "Hello World"
 
-	hash := md5.sum(data)
+	fmt.Println(data)
+
+	hash := md5.Sum([]byte(data))
+
+	str := string(hash[:])
+	fmt.Printf("%x\n", str)
+	fmt.Println(hash)
+/*
+
 
 	f, e := os.Create(hash)
 	check(e)
+	defer f.Close()
 
-	l, e := f.WriteString(data)
+	l, e := f.WriteString(os.Stdout, data)
 	if e != nil {
 		fmt.Println(e)
-		f.Close()
 		return
 	}
-
+*/
 }

@@ -23,7 +23,7 @@ func check(e error) {
 */
 
 func main() {
-
+			// https://go.dev/blog/strings
 	data := "Hello World" // Text data string
 
 	fmt.Println(data) // prints string

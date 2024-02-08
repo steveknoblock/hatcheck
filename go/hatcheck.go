@@ -14,23 +14,37 @@ func check(e error) {
 	}
 }
 
+
+/*
+	func Create(name string) (*File, error)
+
+	accepts string
+	returns file pointer and error
+*/
+
 func main() {
 
 	data := "Hello World"
 
-	fmt.Println(data)
+	fmt.Println(data) // prints string
 
 	hash := md5.Sum([]byte(data))
 
+	fmt.Println(hash) // prints byte slice
+
 	str := string(hash[:])
-	fmt.Printf("%x\n", str)
-	fmt.Println(hash)
+	fmt.Println(str) // prints raw string
+	fmt.Printf("%x\n", str) // prints formatted string
+
+/*
+	f, e := os.Create(string(hash))
+	check(e)
+	defer f.Close()
+*/
 /*
 
 
-	f, e := os.Create(hash)
-	check(e)
-	defer f.Close()
+
 
 	l, e := f.WriteString(os.Stdout, data)
 	if e != nil {

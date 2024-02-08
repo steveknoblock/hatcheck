@@ -34,8 +34,8 @@ func main() {
 
 	str := string(hash[:]) // byte slice to string
 
-	fmt.Println(str) // prints raw string
-	fmt.Printf("%x\n", str) // prints formatted string
+	fmt.Println(str) // prints raw (uninterpted bytes https://pkg.go.dev/fmt) string
+	fmt.Printf("%s\n", str) // prints formatted string
 
 /*
 	f, e := os.Create(string(hash))

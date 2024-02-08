@@ -24,15 +24,16 @@ func check(e error) {
 
 func main() {
 
-	data := "Hello World"
+	data := "Hello World" // Text data string
 
 	fmt.Println(data) // prints string
 
-	hash := md5.Sum([]byte(data))
+	hash := md5.Sum([]byte(data)) // sum accepts []byte slice, returns []byte slice
 
 	fmt.Println(hash) // prints byte slice
 
-	str := string(hash[:])
+	str := string(hash[:]) // byte slice to string
+
 	fmt.Println(str) // prints raw string
 	fmt.Printf("%x\n", str) // prints formatted string
 

@@ -18,7 +18,7 @@ func check(e error) {
 
 /*
 	func Create(name string) (*File, error)
-
+	Creates a file. Will complain when given a path.
 	accepts string
 	returns file pointer and error
 */
@@ -47,9 +47,9 @@ func main() {
 	// I misread this or am just stupid
 	// create creates a file
 	path := "../objects/"
-	f, e := os.Create(path)
-	check(e)
-	defer f.Close()
+	//f, e := os.Create(path)
+	//check(e)
+	//defer f.Close()
 
 /*
 	l, e := f.WriteString(os.Stdout, data)

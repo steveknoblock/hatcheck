@@ -15,7 +15,6 @@ func check(e error) {
 	}
 }
 
-
 /*
 	func Create(name string) (*File, error)
 	Creates a file. Will complain when given a path.
@@ -36,26 +35,42 @@ func main() {
 	shardName := string(hash[0:1])
 	fileName := string(hash[2:])
 
-	//fmt.Println(str) // prints raw (uninterpreted bytes https://pkg.go.dev/fmt) string
-	fmt.Printf("%x\n", shardName) // prints formatted string
-	fmt.Printf("%x\n", fileName)
+	fmt.Printf("Shard: %x\n", shardName)
 	
-	//objPath := "objects"
-	//func Create(name string) (*File, error)
-	//func Dir(path string) string
-	//path := filepath.Dir("../objects/bar")
-	// I misread this or am just stupid
-	// create creates a file
-	path := "../objects/"
-	//f, e := os.Create(path)
-	//check(e)
-	//defer f.Close()
+	fmt.Printf("File: %x\n", fileName)
+	
+	objPath := "../objects/"
+
+	// Create directory.
+	path := objPath + fmt.Sprintf("%x", shardName)
+	fmt.Println("Path: " + path);
+
+	if e := os.MkdirAll(path , os.ModePerm); e != nil {
+		//log.Fatal(e)
+	}
+
+	// Create file.
+	filePath := objPath + fmt.Sprintf("%x", fileName)
+	f, e := os.Create(filePath)
+	check(e)
+	defer f.Close()
 
 /*
-	l, e := f.WriteString(os.Stdout, data)
-	if e != nil {q
+// Make file.
+	fpath := path + "/file"
+	f, err := Create(fpath)
+	if err != nil {
+		t.Fatalf("create %q: %s", fpath, err)
+	}
+	defer f.Close()
+*/
+	// io.WriteString(os.Stdout, "Hello World")
+	// file.WriteString
+	n, e := f.WriteString(data)
+	if e != nil {
 		fmt.Println(e)
 		return
 	}
-*/
+	fmt.Printf("wrote %d bytes\n", n)
+
 }

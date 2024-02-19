@@ -50,7 +50,7 @@ func main() {
 	}
 
 	// Create file.
-	filePath := objPath + fmt.Sprintf("%x", fileName)
+	filePath := objPath + fmt.Sprintf("%x", shardName) + "/" +  fmt.Sprintf("%x", fileName)
 	f, e := os.Create(filePath)
 	check(e)
 	defer f.Close()

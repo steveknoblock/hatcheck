@@ -24,7 +24,7 @@ func check(e error) {
 
 func main() {
 			// https://go.dev/blog/strings
-	data := "Hello World" // Text data string
+	data := "Hello World 255" // Text data string
 
 	//fmt.Println(data) // prints string
 
@@ -50,7 +50,8 @@ func main() {
 	}
 
 	// Create file.
-	filePath := objPath + fmt.Sprintf("%x", shardName) + "/" +  fmt.Sprintf("%x", fileName)
+	//filePath := objPath + fmt.Sprintf("%x", shardName) + "/" +  fmt.Sprintf("%x", fileName)
+	filePath := path + "/" +  fmt.Sprintf("%x", fileName)
 	f, e := os.Create(filePath)
 	check(e)
 	defer f.Close()

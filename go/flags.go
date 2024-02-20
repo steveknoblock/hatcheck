@@ -9,8 +9,8 @@ func main() {
 
     /*
 
-    hatcheck -in = [string]
-    hatcheck -out = [string]
+    hatcheck -in = "content" [string]
+    hatcheck -out = "identifier" [string]
 
     hatcheck -save = [string]
     hatcheck -fetch = [string]
@@ -21,24 +21,27 @@ func main() {
     hatcheck -stash = [string]
     hatcheck -fetch = [string]
 
-    hat check -in
-    hat check -out
+    hat check -in = [string]
+    hat check -out = [string]
+    hat start
 
     */
-    wordPtr := flag.String("stash", "default", "String to save")
-    wordPtr := flag.String("fetch", "default", "Fetch by string")
+    stash := flag.String("stash", "default", "String to save")
+    fetch := flag.String("fetch", "default", "Fetch by string")
 
+    /*
     numbPtr := flag.Int("numb", 42, "an int")
     forkPtr := flag.Bool("fork", false, "a bool")
+*/
 
     var svar string
     flag.StringVar(&svar, "svar", "bar", "a string var")
 
-    flag.Parse()
+    flag.Parse()1
 
-    fmt.Println("word:", *wordPtr)
-    fmt.Println("numb:", *numbPtr)
-    fmt.Println("fork:", *forkPtr)
+    fmt.Println("stash:", *stash)
+    fmt.Println("fetch:", *fetch)
+    //fmt.Println("fork:", *forkPtr)
     fmt.Println("svar:", svar)
     fmt.Println("tail:", flag.Args())
 }

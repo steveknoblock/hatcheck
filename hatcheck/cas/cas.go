@@ -24,7 +24,6 @@ func check(e error) {
 
 func stash(data string) {
 	// https://go.dev/blog/strings
-	data := "Hello World 255" // Text data string
 
 	//fmt.Println(data) // prints string
 

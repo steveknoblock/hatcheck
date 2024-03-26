@@ -1,4 +1,4 @@
-package main
+package hatcheck
 
 import (
 	//"io"
@@ -22,7 +22,7 @@ func check(e error) {
 	returns file pointer and error
 */
 
-func main() {
+func stash() {
 			// https://go.dev/blog/strings
 	data := "Hello World 255" // Text data string
 

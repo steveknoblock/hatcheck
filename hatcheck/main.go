@@ -1,4 +1,4 @@
-package hatcheck
+package main
 
 import (
 	//"io"

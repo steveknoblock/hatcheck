@@ -23,20 +23,17 @@ func check(e error) {
 */
 
 func Stash(data string) {
-	// https://go.dev/blog/strings
 
-	//fmt.Println(data) // prints string
+	hash := md5.Sum([]byte(data))
 
-	hash := md5.Sum([]byte(data)) // sum accepts []byte slice, returns []byte slice
+	hexHash := fmt.Sprintf("%x", hash)
 
-	//fmt.Println(hash) // prints byte slice
+	shardName := hexHash[0:2]  // first 2 hex chars (1 byte)
 
-	shardName := string(hash[0:1])
-	fileName := string(hash[2:])
+	fileName  := hexHash[2:]   // remaining 30 hex chars
 
-	fmt.Printf("Shard: %x\n", shardName)
-	
-	fmt.Printf("File: %x\n", fileName)
+	fmt.Printf("Shard: %s\n", shardName)
+	fmt.Printf("File: %s\n", fileName)
 	
 	objPath := "../objects/"
 

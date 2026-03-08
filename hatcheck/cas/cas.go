@@ -54,3 +54,22 @@ func Stash(data string) {
 	return hexHash, nil
 
 }
+
+func Fetch(hexHash string) (string, error) {
+
+	// Shard name is first 2 hex chars (1 byte).
+	shardName := hexHash[0:2]
+	// File name is remaining 30 hex chars.
+	fileName  := hexHash[2:]
+
+	// TODO: make this path configurable
+	filePath := "../objects/" + shardName + "/" + fileName
+
+	// Read file.
+	data, e := os.ReadFile(filePath)
+	if e != nil {
+		return "", e
+	}
+
+	return string(data), nil
+}

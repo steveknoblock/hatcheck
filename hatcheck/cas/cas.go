@@ -9,65 +9,48 @@ import (
 	//"path/filepath"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-/*
-	func Create(name string) (*File, error)
-	Creates a file. Will complain when given a path.
-	accepts string
-	returns file pointer and error
-*/
-
 func Stash(data string) {
 
+	// Create hash of data.
 	hash := md5.Sum([]byte(data))
 
 	hexHash := fmt.Sprintf("%x", hash)
 
-	shardName := hexHash[0:2]  // first 2 hex chars (1 byte)
+	// Create directory.
 
-	fileName  := hexHash[2:]   // remaining 30 hex chars
+	// Shard name is first 2 hex chars (1 byte).
+	shardName := hexHash[0:2]
+	// File name is remaining 30 hex chars.
+	fileName  := hexHash[2:]
 
 	fmt.Printf("Shard: %s\n", shardName)
 	fmt.Printf("File: %s\n", fileName)
 	
+	// TODO: make this path configurable
 	objPath := "../objects/"
 
 	// Create directory.
-	path := objPath + fmt.Sprintf("%x", shardName)
-	fmt.Println("Path: " + path);
+	path := objPath + shardName
+	fmt.Println("Path: " + path)
 
-	if e := os.MkdirAll(path , os.ModePerm); e != nil {
-		//log.Fatal(e)
+	if e := os.MkdirAll(path, os.ModePerm); e != nil {
+		return "", e
 	}
 
 	// Create file.
-	//filePath := objPath + fmt.Sprintf("%x", shardName) + "/" +  fmt.Sprintf("%x", fileName)
-	filePath := path + "/" +  fmt.Sprintf("%x", fileName)
+	filePath := path + "/" + fileName
 	f, e := os.Create(filePath)
-	check(e)
+	if e != nil {
+		return "", e
+	}
 	defer f.Close()
 
-/*
-// Make file.
-	fpath := path + "/file"
-	f, err := Create(fpath)
-	if err != nil {
-		t.Fatalf("create %q: %s", fpath, err)
-	}
-	defer f.Close()
-*/
-	// io.WriteString(os.Stdout, "Hello World")
-	// file.WriteString
 	n, e := f.WriteString(data)
 	if e != nil {
-		fmt.Println(e)
-		return
+		return "", e
 	}
 	fmt.Printf("wrote %d bytes\n", n)
+
+	return hexHash, nil
 
 }

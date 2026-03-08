@@ -1,1 +1,9 @@
+# Hatcheck
 /objects/
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local

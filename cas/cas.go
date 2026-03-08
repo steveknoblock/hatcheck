@@ -21,11 +21,11 @@ func Stash(data string) (string, error) {
 	// Shard name is first 2 hex chars (1 byte).
 	shardName := hexHash[0:2]
 	// File name is remaining 30 hex chars.
-	fileName  := hexHash[2:]
+	fileName := hexHash[2:]
 
 	fmt.Printf("Shard: %s\n", shardName)
 	fmt.Printf("File: %s\n", fileName)
-	
+
 	// TODO: make this path configurable
 	objPath := "../objects/"
 
@@ -60,7 +60,7 @@ func Fetch(hexHash string) (string, error) {
 	// Shard name is first 2 hex chars (1 byte).
 	shardName := hexHash[0:2]
 	// File name is remaining 30 hex chars.
-	fileName  := hexHash[2:]
+	fileName := hexHash[2:]
 
 	// TODO: make this path configurable
 	filePath := "../objects/" + shardName + "/" + fileName

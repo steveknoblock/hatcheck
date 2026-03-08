@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"cas/cas"
+	"github.com/steveknoblock/hatcheck-go/cas"
 )
 
 func stashHandler(w http.ResponseWriter, req *http.Request) {

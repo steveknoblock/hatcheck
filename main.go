@@ -7,7 +7,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	//"path/filepath"
-	"cas"
+	"cas/cas"
 )
 
 func check(e error) {

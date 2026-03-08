@@ -9,7 +9,7 @@ import (
 	//"path/filepath"
 )
 
-func Stash(data string) {
+func Stash(data string) (string, error) {
 
 	// Create hash of data.
 	hash := md5.Sum([]byte(data))

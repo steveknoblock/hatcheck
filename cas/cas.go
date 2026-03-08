@@ -1,12 +1,9 @@
 package cas
 
 import (
-	//"io"
-	"os"
-	//"log"
 	"crypto/md5"
 	"fmt"
-	//"path/filepath"
+	"os"
 )
 
 func Stash(data string) (string, error) {

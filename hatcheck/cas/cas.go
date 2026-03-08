@@ -22,7 +22,7 @@ func check(e error) {
 	returns file pointer and error
 */
 
-func stash(data string) {
+func Stash(data string) {
 	// https://go.dev/blog/strings
 
 	//fmt.Println(data) // prints string

@@ -414,7 +414,7 @@ func TestAppendBatch_AddsAllEntriesTogether(t *testing.T) {
 
 	// Reload from disk to confirm the whole batch was actually persisted,
 	// not just held in memory.
-	reloaded, err := New(store.logPath[:len(store.logPath)-len("/log.json")], &TagIndex{}, &DateIndex{}, &NameIndex{}, &RelationIndex{})
+	reloaded, err := New(store.logPath[:len(store.logPath)-len("/log.json")], NewTagIndex(), NewDateIndex(), NewNameIndex(), NewRelationIndex())
 	if err != nil {
 		t.Fatalf("reload error: %v", err)
 	}

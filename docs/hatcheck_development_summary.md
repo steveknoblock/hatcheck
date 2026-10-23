@@ -72,7 +72,7 @@ These four primitives compose into documents, collections, data graphs, structur
 - Stytch magic-link email — no passwords, no local user table
 - `POST /auth/login` sends the link; `GET /auth/authenticate` exchanges the Stytch token for a session JWT
 - On successful authentication, a wildcard read capability (`Hash: "*"`, `Perm: read`) is issued and recorded, so every logged-in user can read anything by default
-- Redirect to `/ui/` carries `session_jwt`, `user_id`, `email`, `default_ns`, and `read_cap` as query params; the UI stores these in `sessionStorage` and cleans the URL
+- Redirect to `/ui/` carries `session_jwt`, `user_id`, `email`, and `read_cap` as query params; the UI stores these in `sessionStorage` and cleans the URL
 - Every subsequent request carries `Authorization: Bearer <session_jwt>`
 
 ### Capability-Based Access Control (`server/capability.go`, `internal/metadata`)
@@ -107,7 +107,7 @@ These four primitives compose into documents, collections, data graphs, structur
 - Namespace is just a prefix on the label string
 - Enables multi-user and multi-project organization
 - No special implementation needed beyond prefix convention
-- On login, `default_ns` suggests a starting namespace slugified from the user's email or Stytch user ID — a default, not a constraint; nothing server-side enforces it, and multiple namespaces per user are fully supported
+- On login, the UI (not the server) starts in a namespace named for the Stytch user ID — a client-side default, not a constraint; multiple namespaces per user are fully supported
 
 ### Metadata Log as Event Source
 - Append-only log is the source of truth

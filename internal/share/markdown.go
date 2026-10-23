@@ -296,7 +296,7 @@ func uniquePath(dir, base string, used map[string]int) string {
 // --- Local, self-contained helpers ---
 //
 // slug and parseTagsForExport intentionally duplicate logic that already
-// exists elsewhere (server/auth_handlers.go's slugify, metadata.ParseTags)
+// exists elsewhere (metadata.ParseTags)
 // rather than importing across packages for it. This package works
 // directly off the raw log and CAS specifically so it can operate
 // independently of a running Store (see Export/Import above) — pulling in
@@ -324,8 +324,6 @@ func parseTagsForExport(content string) []string {
 
 // slug lowercases s and replaces every run of characters other than
 // a-z, 0-9, '-', and '_' with a single '-', trimming leading/trailing '-'.
-// Mirrors server/auth_handlers.go's slugify exactly, for the same reason
-// documented above.
 func slug(s string) string {
 	s = strings.ToLower(s)
 	var b strings.Builder

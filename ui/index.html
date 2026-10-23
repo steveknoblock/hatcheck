@@ -1409,7 +1409,6 @@ async function handleMagicLinkCallback() {
     const uid       = params.get('user_id');
     const email     = params.get('email');
     const readCap   = params.get('read_cap');
-    const defaultNs = params.get('default_ns');
     if (!jwt) return;
 
     // Clean the parameters from the URL without a page reload.
@@ -1427,13 +1426,13 @@ async function handleMagicLinkCallback() {
         sessionStorage.setItem('browse_cap_token', browseCapToken);
     }
 
-    // Apply the server's suggested default namespace (see defaultNamespace
-    // in server/auth_handlers.go) as the starting namespace, but only if
-    // we don't already have one active — a fresh login shouldn't clobber
-    // a namespace the user was already mid-session on (e.g. a page reload
-    // that happens to still carry stale callback params).
-    if (defaultNs && !namespace) {
-        namespace = defaultNs;
+    // Start in a namespace named for the user ID, but only if we don't
+    // already have one active — a fresh login shouldn't clobber a namespace
+    // the user was already mid-session on (e.g. a page reload that happens
+    // to still carry stale callback params). This is purely a client-side
+    // convenience; nothing server-side knows or enforces it.
+    if (uid && !namespace) {
+        namespace = uid;
         sessionStorage.setItem('namespace', namespace);
     }
 

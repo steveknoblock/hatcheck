@@ -157,12 +157,12 @@ Once you hold a real admin capability, **unset `HATCHECK_BOOTSTRAP_TOKEN`** — 
 ## Logging in
 
 1. `POST /auth/login` with `{"email": "you@example.com"}` — triggers a Stytch magic-link email.
-2. Click the link. It hits `GET /auth/authenticate?token=...`, which exchanges the Stytch token for a session JWT, issues you a wildcard read capability (`Hash: "*"`, `Perm: read`), and redirects to `/ui/` with `session_jwt`, `user_id`, `email`, `default_ns`, and `read_cap` as query parameters.
+2. Click the link. It hits `GET /auth/authenticate?token=...`, which exchanges the Stytch token for a session JWT, issues you a wildcard read capability (`Hash: "*"`, `Perm: read`), and redirects to `/ui/` with `session_jwt`, `user_id`, `email`, and `read_cap` as query parameters.
 3. The UI reads those from the URL, stores them in `sessionStorage`, and cleans the URL.
 
 Every subsequent request from the browser carries `Authorization: Bearer <session_jwt>`, plus `X-Capability-Token: <capability JSON>` for capability-protected routes.
 
-`default_ns` is only a starting suggestion — derived from the local part of your email (or your Stytch user ID as a fallback), slugified. Nothing server-side enforces it; you're free to switch to or create any other namespace at any time.
+The UI starts you in a namespace named after your Stytch user ID. That is a client-side convenience only — the server has no notion of a default namespace, and you're free to switch to or create any other namespace at any time.
 
 ---
 

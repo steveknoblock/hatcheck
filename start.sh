@@ -1,6 +1,6 @@
-cd ~/projects/Hatcheck-Go/
+cd ~/projects/hatcheck/
 git fetch
-git checkout develop-go
+git checkout develop
 git pull
 go build ./...
 set -a && source .env && set +a

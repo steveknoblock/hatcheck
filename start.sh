@@ -1,4 +1,4 @@
-cd projects/Hatcheck-Go/
+cd ~/projects/Hatcheck-Go/
 git fetch
 git checkout develop-go
 git pull

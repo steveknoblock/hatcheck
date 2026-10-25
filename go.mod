@@ -1,4 +1,4 @@
-module github.com/steveknoblock/hatcheck-go
+module github.com/steveknoblock/hatcheck
 
 go 1.25.0
 

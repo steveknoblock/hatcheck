@@ -11,10 +11,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/auth"
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
-	"github.com/steveknoblock/hatcheck-go/internal/share"
+	"github.com/steveknoblock/hatcheck/internal/auth"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/share"
 )
 
 // Perm constants define the operations a capability may authorize.

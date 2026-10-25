@@ -3,7 +3,7 @@
 ## Project Overview
 Hatcheck is a content addressable store (CAS) accessible over HTTP, written in Go. It stores immutable text objects addressed by MD5 hash, with a metadata layer for organization, discovery, and capability-based access control. Authentication is Stytch magic-link email.
 
-**GitHub:** `https://github.com/steveknoblock/Hatcheck-Go`
+**GitHub:** `https://github.com/steveknoblock/hatcheck`
 **Working branch:** `develop-go`
 **Local (Windows):** `C:\Users\User\Dropbox\Projects\Main\Hatcheck-Go`
 **Local (Ubuntu/Docker):** `~/projects/Hatcheck-Go`

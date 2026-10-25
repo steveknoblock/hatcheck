@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // This file is the bridge between role bookkeeping (internal/metadata —

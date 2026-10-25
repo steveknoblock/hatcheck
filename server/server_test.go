@@ -16,8 +16,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // --- Test helpers ---

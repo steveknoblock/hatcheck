@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"github.com/steveknoblock/hatcheck-go/internal/auth"
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/auth"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // registerRoutes wires all HTTP handlers to their paths. It is the single

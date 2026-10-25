@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
-	"github.com/steveknoblock/hatcheck-go/internal/share"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/share"
 )
 
 const usage = `Hatcheck - Content Addressable Store

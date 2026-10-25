@@ -34,8 +34,8 @@ These become the `STYTCH_PROJECT_ID`, `STYTCH_SECRET`, and `STYTCH_REDIRECT_URL`
 Clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/steveknoblock/Hatcheck-Go.git
-cd Hatcheck-Go
+git clone https://github.com/steveknoblock/hatcheck.git
+cd hatcheck
 git checkout develop-go
 ```
 

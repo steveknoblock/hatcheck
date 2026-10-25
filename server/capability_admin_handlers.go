@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // capabilityListEntry is a CapabilityPayload annotated with its current

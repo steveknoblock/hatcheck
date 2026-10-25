@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // A Context is deliberately not a new primitive: it's a Collection whose

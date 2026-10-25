@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // roleAssignHandler assigns a named role to a principal, records the

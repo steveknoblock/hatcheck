@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/steveknoblock/hatcheck-go/internal/auth"
+	"github.com/steveknoblock/hatcheck/internal/auth"
 )
 
 // AuthMiddleware wraps handlers with JWT validation.

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 var roleCapTestKey = []byte("role-capability-test-key")

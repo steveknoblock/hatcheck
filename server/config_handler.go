@@ -7,8 +7,8 @@ import (
 
 	"golang.org/x/time/rate"
 
-	"github.com/steveknoblock/hatcheck-go/internal/cas"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/cas"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // rateLimitInfo describes one rate-limit pool in human-readable form.

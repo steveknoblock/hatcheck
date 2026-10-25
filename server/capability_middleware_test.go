@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // --- Test helpers ---

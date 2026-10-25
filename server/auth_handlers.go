@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/steveknoblock/hatcheck-go/internal/auth"
-	"github.com/steveknoblock/hatcheck-go/internal/metadata"
+	"github.com/steveknoblock/hatcheck/internal/auth"
+	"github.com/steveknoblock/hatcheck/internal/metadata"
 )
 
 // loginHandler accepts a POST with an email address and sends a magic link.

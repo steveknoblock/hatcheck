@@ -8,7 +8,7 @@ services:
         # See the note in the Dockerfile for the history of how the project
         # landed on this floor.
         GO_VERSION: "1.25.0"
-    image: hatcheck-go:local
+    image: hatcheck:local
     restart: unless-stopped
     ports:
       - "8090:8090"

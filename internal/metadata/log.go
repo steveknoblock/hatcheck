@@ -242,7 +242,10 @@ func (r *RevokedSet) IsRevoked(id string) bool {
 
 // --- ParseTags ---
 
-var hashtagRe = regexp.MustCompile(`#([a-zA-Z0-9_]+)`)
+// hashtagRe matches a tag: letters, digits and underscores, optionally joined
+// by single hyphens (#on-my-iphone). A hyphen only counts when a word
+// character follows it, so "#todo-" or "#todo--" yields "todo", not "todo-".
+var hashtagRe = regexp.MustCompile(`#([a-zA-Z0-9_]+(?:-[a-zA-Z0-9_]+)*)`)
 
 func ParseTags(content string) []string {
 	matches := hashtagRe.FindAllStringSubmatch(content, -1)

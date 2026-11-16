@@ -75,6 +75,37 @@ func TestParseTags_Underscore(t *testing.T) {
 	}
 }
 
+func TestParseTags_Hyphen(t *testing.T) {
+	tags := ParseTags("Filed under #on-my-iphone and #cebs-notes-2 today.")
+	if len(tags) != 2 || tags[0] != "on-my-iphone" || tags[1] != "cebs-notes-2" {
+		t.Errorf("expected [on-my-iphone cebs-notes-2], got %v", tags)
+	}
+}
+
+func TestParseTags_HyphenOnlyInside(t *testing.T) {
+	cases := map[string][]string{
+		"#todo- next":     {"todo"},
+		"#todo-- next":    {"todo"},
+		"#a-b- and #c":    {"a-b", "c"},
+		"# - not a tag":   {},
+		"#-leading":       {},
+		"#Mixed-Case-Tag": {"mixed-case-tag"},
+		"#snake_case-and": {"snake_case-and"},
+	}
+	for in, want := range cases {
+		got := ParseTags(in)
+		if len(got) != len(want) {
+			t.Errorf("ParseTags(%q) = %v, want %v", in, got, want)
+			continue
+		}
+		for i := range want {
+			if got[i] != want[i] {
+				t.Errorf("ParseTags(%q) = %v, want %v", in, got, want)
+			}
+		}
+	}
+}
+
 // --- New ---
 
 func TestNew_EmptyStore(t *testing.T) {

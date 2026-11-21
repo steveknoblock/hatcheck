@@ -20,6 +20,13 @@ type Store struct {
 	Log      []Entry
 	indexes  []Index
 	indexMap map[string]Index
+
+	// tagsByHash maps a hash to the tags of its most recent stash entry, so
+	// TagsForHash is a map lookup instead of a scan of the whole log (which
+	// parsed every stash payload until it found the hash — tens of
+	// milliseconds per call once the log holds tens of thousands of entries).
+	// Guarded by mu, like Log.
+	tagsByHash map[string][]string
 }
 
 func New(metaPath string, indexes ...Index) (*Store, error) {
@@ -31,6 +38,8 @@ func New(metaPath string, indexes ...Index) (*Store, error) {
 		logPath:  filepath.Join(metaPath, "log.json"),
 		indexes:  indexes,
 		indexMap: make(map[string]Index),
+
+		tagsByHash: make(map[string][]string),
 	}
 	for _, idx := range indexes {
 		s.indexMap[idx.Name()] = idx
@@ -165,8 +174,25 @@ func (s *Store) appendBatchLines(entries []Entry) error {
 	return err
 }
 
+// noteStashTags records a stash entry's tags in tagsByHash. Entries that are
+// not stashes, or whose payload cannot be parsed, are ignored — the same
+// entries TagsForHash used to skip when it scanned the log. Later entries
+// overwrite earlier ones, so the most recent stash for a hash wins.
+// Callers must hold s.mu for writing (or be single-threaded, as in New).
+func (s *Store) noteStashTags(entry Entry) {
+	if entry.Op != OpStash {
+		return
+	}
+	var p StashPayload
+	if err := json.Unmarshal(entry.Payload, &p); err != nil {
+		return
+	}
+	s.tagsByHash[p.Hash] = p.Tags
+}
+
 func (s *Store) buildIndexes() {
 	for _, entry := range s.Log {
+		s.noteStashTags(entry)
 		for _, idx := range s.indexes {
 			idx.Add(entry)
 		}
@@ -192,6 +218,7 @@ func (s *Store) appendUnlocked(entries []Entry) error {
 	}
 	s.Log = append(s.Log, entries...)
 	for _, entry := range entries {
+		s.noteStashTags(entry)
 		for _, idx := range s.indexes {
 			idx.Add(entry)
 		}
@@ -506,21 +533,13 @@ func (s *Store) Query(indexName, key string) []string {
 }
 
 // TagsForHash returns tags from the most recent stash entry for a given hash.
+// It is a map lookup; see tagsByHash.
 func (s *Store) TagsForHash(hash string) []string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	for i := len(s.Log) - 1; i >= 0; i-- {
-		if s.Log[i].Op != OpStash {
-			continue
-		}
-		var p StashPayload
-		if err := json.Unmarshal(s.Log[i].Payload, &p); err != nil {
-			continue
-		}
-		if p.Hash == hash {
-			return p.Tags
-		}
+	if tags, ok := s.tagsByHash[hash]; ok && tags != nil {
+		return tags
 	}
 	return []string{}
 }

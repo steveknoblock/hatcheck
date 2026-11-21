@@ -421,6 +421,54 @@ func TestTagsForHash_IgnoresNonStashEntries(t *testing.T) {
 	}
 }
 
+func TestTagsForHash_SurvivesReload(t *testing.T) {
+	dir := t.TempDir()
+	newStore := func() *Store {
+		st, err := New(dir, NewTagIndex(), NewDateIndex(), NewNameIndex(), NewRelationIndex())
+		if err != nil {
+			t.Fatalf("New() error: %v", err)
+		}
+		return st
+	}
+
+	store := newStore()
+	store.AppendStash("hash1", 10, "First #draft")
+	store.AppendStash("hash1", 10, "Second #draft #published")
+	store.AppendStash("hash2", 10, "Other #ideas")
+
+	// A fresh Store reads the log from disk; the map must be rebuilt, with
+	// the most recent stash for hash1 winning.
+	store2 := newStore()
+	if tags := store2.TagsForHash("hash1"); len(tags) != 2 || tags[1] != "published" {
+		t.Errorf("hash1 after reload: got %v, want [draft published]", tags)
+	}
+	if tags := store2.TagsForHash("hash2"); len(tags) != 1 || tags[0] != "ideas" {
+		t.Errorf("hash2 after reload: got %v, want [ideas]", tags)
+	}
+	if tags := store2.TagsForHash("nope"); tags == nil || len(tags) != 0 {
+		t.Errorf("unknown hash should give an empty non-nil slice, got %#v", tags)
+	}
+}
+
+func TestTagsForHash_UntaggedStashIsEmptyNotNil(t *testing.T) {
+	store := newTestStore(t)
+	store.AppendStash("hash1", 10, "no tags here")
+	if tags := store.TagsForHash("hash1"); tags == nil || len(tags) != 0 {
+		t.Errorf("got %#v, want empty non-nil slice", tags)
+	}
+}
+
+func TestTagsForHash_TracksAppendBatch(t *testing.T) {
+	store := newTestStore(t)
+	payload, _ := json.Marshal(StashPayload{Hash: "hb", Size: 1, Tags: []string{"batched"}})
+	if err := store.AppendBatch([]Entry{{Op: OpStash, Payload: payload}}); err != nil {
+		t.Fatal(err)
+	}
+	if tags := store.TagsForHash("hb"); len(tags) != 1 || tags[0] != "batched" {
+		t.Errorf("got %v, want [batched]", tags)
+	}
+}
+
 // --- AppendBatch ---
 
 func TestAppendBatch_AddsAllEntriesTogether(t *testing.T) {

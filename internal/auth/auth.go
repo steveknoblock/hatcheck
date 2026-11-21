@@ -48,6 +48,13 @@ type Identity struct {
 type Client struct {
 	api         *stytchapi.API
 	redirectURL string
+
+	// identities caches successful session-JWT validations for a short time;
+	// see cache.go for why.
+	identities *identityCache
+	// validate does the actual Stytch validation. It is a field so tests can
+	// replace it; NewClient sets it to validateSessionJWTRemote.
+	validate func(ctx context.Context, sessionJWT string) (Identity, error)
 }
 
 // NewClient creates a new auth Client from environment variables.
@@ -73,10 +80,13 @@ func NewClient() (*Client, error) {
 		return nil, fmt.Errorf("failed to create Stytch client: %w", err)
 	}
 
-	return &Client{
+	c := &Client{
 		api:         api,
 		redirectURL: redirectURL,
-	}, nil
+		identities:  newIdentityCache(identityCacheTTL, identityCacheMax),
+	}
+	c.validate = c.validateSessionJWTViaStytch
+	return c, nil
 }
 
 // SendMagicLink sends a magic link email to the given address. If the user
@@ -138,6 +148,17 @@ func (c *Client) AuthenticateMagicLink(ctx context.Context, token string) (Ident
 // In v18, AuthenticateJWT handles both local and remote validation automatically:
 // it validates locally if the JWT is fresh, and falls back to remote if not.
 func (c *Client) ValidateSessionJWT(ctx context.Context, sessionJWT string) (Identity, error) {
+	return c.identities.do(sessionJWT, func() (Identity, error) {
+		// The validation may be shared with other requests carrying the same
+		// token, so it must not be abandoned just because this request's
+		// client went away.
+		return c.validate(context.WithoutCancel(ctx), sessionJWT)
+	})
+}
+
+// validateSessionJWTViaStytch is the uncached validation: local if the JWT
+// is fresh, otherwise a remote Stytch call.
+func (c *Client) validateSessionJWTViaStytch(ctx context.Context, sessionJWT string) (Identity, error) {
 	resp, err := c.api.Sessions.AuthenticateJWT(
 		ctx,
 		maxTokenAge,

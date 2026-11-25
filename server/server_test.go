@@ -719,6 +719,106 @@ func TestRelationsHandler_MissingHash(t *testing.T) {
 	}
 }
 
+// postRelation records a relation through relationHandler, failing the test on error.
+func postRelation(t *testing.T, store *cas.Store, meta *metadata.Store, from, rel, to string) {
+	t.Helper()
+	body := `{"from":"` + from + `","rel":"` + rel + `","to":"` + to + `"}`
+	req := httptest.NewRequest(http.MethodPost, "/relation", strings.NewReader(body))
+	w := httptest.NewRecorder()
+	relationHandler(w, req, store, meta, serverTestKey, testConfig(), vrEmpty())
+	if w.Code != http.StatusCreated {
+		t.Fatalf("setup: failed to create relation: %d %s", w.Code, w.Body.String())
+	}
+}
+
+func TestRelationsHandler_ByPredicate(t *testing.T) {
+	store, _, _, meta := newTestEnv(t)
+	a := stashOne(t, store, meta, "post a")
+	b := stashOne(t, store, meta, "post b")
+
+	postRelation(t, store, meta, a, "archived", a)
+	postRelation(t, store, meta, b, "contextualizes", a)
+	postRelation(t, store, meta, b, "archived", b)
+
+	req := httptest.NewRequest(http.MethodGet, "/relations?rel=archived", nil)
+	w := httptest.NewRecorder()
+	relationsHandler(w, req, meta, vrEmpty())
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	var result map[string][]metadata.RelationPayload
+	json.Unmarshal(w.Body.Bytes(), &result)
+	got := result["relations"]
+	if len(got) != 2 {
+		t.Fatalf("expected 2 archived relations, got %d: %+v", len(got), got)
+	}
+	// Recorded order must be preserved: a before b.
+	if got[0].From != a || got[1].From != b {
+		t.Errorf("expected order [a, b], got [%s, %s]", got[0].From, got[1].From)
+	}
+	for _, r := range got {
+		if r.Rel != "archived" {
+			t.Errorf("unexpected predicate %q in archived results", r.Rel)
+		}
+	}
+}
+
+func TestRelationsHandler_ByPredicate_None(t *testing.T) {
+	_, _, _, meta := newTestEnv(t)
+
+	req := httptest.NewRequest(http.MethodGet, "/relations?rel=archived", nil)
+	w := httptest.NewRecorder()
+	relationsHandler(w, req, meta, vrEmpty())
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", w.Code)
+	}
+	// Must be an empty JSON array, not null, so clients can range over it.
+	if !strings.Contains(w.Body.String(), `"relations":[]`) {
+		t.Errorf("expected empty relations array, got %s", w.Body.String())
+	}
+}
+
+func TestRelationsHandler_ByPredicate_PreservesToggleOrder(t *testing.T) {
+	store, _, _, meta := newTestEnv(t)
+	a := stashOne(t, store, meta, "post a")
+
+	// archive, unarchive, archive again: both predicates keep every entry,
+	// in log order, so a caller can resolve "last one wins" across the two.
+	postRelation(t, store, meta, a, "archived", a)
+	postRelation(t, store, meta, a, "unarchived", a)
+	postRelation(t, store, meta, a, "archived", a)
+
+	req := httptest.NewRequest(http.MethodGet, "/relations?rel=archived", nil)
+	w := httptest.NewRecorder()
+	relationsHandler(w, req, meta, vrEmpty())
+	var result map[string][]metadata.RelationPayload
+	json.Unmarshal(w.Body.Bytes(), &result)
+	if len(result["relations"]) != 2 {
+		t.Errorf("expected 2 archived entries (duplicates kept), got %d", len(result["relations"]))
+	}
+}
+
+func TestRelationsHandler_HashAndPredicateFilters(t *testing.T) {
+	store, _, _, meta := newTestEnv(t)
+	a := stashOne(t, store, meta, "post a")
+	b := stashOne(t, store, meta, "post b")
+
+	postRelation(t, store, meta, a, "archived", a)
+	postRelation(t, store, meta, a, "contextualizes", b)
+
+	req := httptest.NewRequest(http.MethodGet, "/relations?hash="+a+"&rel=archived", nil)
+	w := httptest.NewRecorder()
+	relationsHandler(w, req, meta, vrEmpty())
+
+	var result map[string][]metadata.RelationPayload
+	json.Unmarshal(w.Body.Bytes(), &result)
+	if len(result["outgoing"]) != 1 || result["outgoing"][0].Rel != "archived" {
+		t.Errorf("expected only the archived outgoing relation, got %+v", result["outgoing"])
+	}
+}
+
 // --- tagsHandler ---
 
 func TestTagsHandler_Empty(t *testing.T) {

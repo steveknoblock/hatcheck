@@ -625,6 +625,24 @@ func (s *Store) RelationsForHash(hash string) (outgoing []RelationPayload, incom
 	return []RelationPayload{}, []RelationPayload{}
 }
 
+// RelationsByPredicate returns every relation whose predicate is rel, in the
+// order the relations were recorded. Callers that treat a predicate as a
+// toggle (e.g. "archived" / "unarchived") rely on that order: the last entry
+// for a given From wins.
+func (s *Store) RelationsByPredicate(rel string) []RelationPayload {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	if idx, ok := s.indexMap["relation"]; ok {
+		if rq, ok := idx.(RelationQuerier); ok {
+			if found := rq.QueryRich("rel:" + rel); found != nil {
+				return found
+			}
+		}
+	}
+	return []RelationPayload{}
+}
+
 // NameEntry holds a label and the hash it points to.
 type NameEntry struct {
 	Label string `json:"label"`

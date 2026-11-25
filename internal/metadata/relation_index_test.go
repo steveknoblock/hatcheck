@@ -143,3 +143,48 @@ func TestRelationIndex_RelationsForHashThroughStore(t *testing.T) {
 		t.Errorf("after reload RelationsForHash(a) outgoing = %+v, want one", out)
 	}
 }
+
+func TestRelationIndex_RelationsByPredicateThroughStore(t *testing.T) {
+	dir := t.TempDir()
+	store, err := New(dir, NewRelationIndex())
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+
+	if got := store.RelationsByPredicate("archived"); got == nil || len(got) != 0 {
+		t.Errorf("RelationsByPredicate on empty store = %#v, want empty non-nil slice", got)
+	}
+
+	// Archive, unarchive, archive again: every entry is kept, in log order.
+	for _, step := range []struct{ hash, from, rel, to string }{
+		{"r1", "a", "archived", "a"},
+		{"r2", "b", "cites", "a"},
+		{"r3", "a", "unarchived", "a"},
+		{"r4", "a", "archived", "a"},
+		{"r5", "c", "archived", "c"},
+	} {
+		if err := store.AppendRelation(step.hash, step.from, step.rel, step.to); err != nil {
+			t.Fatalf("AppendRelation %s: %v", step.hash, err)
+		}
+	}
+
+	got := store.RelationsByPredicate("archived")
+	want := []string{"r1", "r4", "r5"}
+	if len(got) != len(want) {
+		t.Fatalf("RelationsByPredicate(archived) = %+v, want hashes %v", got, want)
+	}
+	for i, h := range want {
+		if got[i].Hash != h {
+			t.Errorf("entry %d hash = %q, want %q (log order)", i, got[i].Hash, h)
+		}
+	}
+
+	// Reopening replays the log and must give the same answer.
+	reopened, err := New(dir, NewRelationIndex())
+	if err != nil {
+		t.Fatalf("reopen: %v", err)
+	}
+	if got := reopened.RelationsByPredicate("archived"); len(got) != 3 {
+		t.Errorf("after reload got %d archived relations, want 3", len(got))
+	}
+}

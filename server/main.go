@@ -380,8 +380,20 @@ func relationHandler(w http.ResponseWriter, req *http.Request, store *cas.Store,
 	json.NewEncoder(w).Encode(stashResponse{Hash: hash, Capability: cap})
 }
 
-// relationsHandler returns all relations for the given hash.
+// relationsHandler returns relations, in one of two forms.
+//
 // GET /relations?hash=<hash>
+//
+//	every relation with hash on either end, as {"outgoing":[...],"incoming":[...]}.
+//
+// GET /relations?rel=<predicate>
+//
+//	every relation in the whole log with that predicate, in the order they were
+//	recorded, as {"relations":[...]}. This lets a caller read a predicate-wide
+//	set (e.g. all "archived" posts) in one request instead of one per hash.
+//
+// If both are given, the hash form is returned with each side filtered to
+// that predicate.
 func relationsHandler(w http.ResponseWriter, req *http.Request, meta *metadata.Store, vr VerifiedRequest) {
 	if req.Method != http.MethodGet {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -389,12 +401,25 @@ func relationsHandler(w http.ResponseWriter, req *http.Request, meta *metadata.S
 	}
 
 	hash := req.URL.Query().Get("hash")
+	rel := req.URL.Query().Get("rel")
+	if hash == "" && rel == "" {
+		http.Error(w, "missing hash or rel parameter", http.StatusBadRequest)
+		return
+	}
+
 	if hash == "" {
-		http.Error(w, "missing hash parameter", http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(struct {
+			Relations []metadata.RelationPayload `json:"relations"`
+		}{Relations: meta.RelationsByPredicate(rel)})
 		return
 	}
 
 	outgoing, incoming := meta.RelationsForHash(hash)
+	if rel != "" {
+		outgoing = filterByPredicate(outgoing, rel)
+		incoming = filterByPredicate(incoming, rel)
+	}
 
 	if outgoing == nil {
 		outgoing = []metadata.RelationPayload{}
@@ -413,6 +438,19 @@ func relationsHandler(w http.ResponseWriter, req *http.Request, meta *metadata.S
 		Outgoing: outgoing,
 		Incoming: incoming,
 	})
+}
+
+// filterByPredicate returns the relations in rels whose predicate is rel,
+// preserving order. It builds a new slice rather than filtering in place,
+// because rels may alias the relation index's own storage.
+func filterByPredicate(rels []metadata.RelationPayload, rel string) []metadata.RelationPayload {
+	out := make([]metadata.RelationPayload, 0, len(rels))
+	for _, r := range rels {
+		if r.Rel == rel {
+			out = append(out, r)
+		}
+	}
+	return out
 }
 
 // objectMetaHandler returns per-hash metadata not otherwise available in a
